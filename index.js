@@ -14,7 +14,9 @@ So: understand first, then check the changes.
 // 5. Add a Custom marker to our map (also within initMap)
 // 6. Add an Info Window - a little pop up with some content.
 // 7. Add multiple markers to map
-// 8. Customize marker Icons for certain Markers
+// 8. Customize marker Icons for certain Markers (avoid "undefined" icons)
+// 9. Customize infoWindow for each marker - diff content
+// 10. Eliminate individual function calls for each marker: array, database
 
 
 
@@ -146,16 +148,54 @@ So: understand first, then check the changes.
 // then pass these props, including a value for icon
 // so we can remove the hardcoded "beachflag" value & repl with a var
 
-    // b. call addMarker function and pass in values
-    addMarker( { coords: {lat: -34.9285, lng: 138.6007} } );  // Adelaide SA
+      // 9. Customize infoWindow for each marker - diff content
+        // don't want same info for each marker, so need to pass that info in as a property
+        // as before with marker icons, set a test to see if param passed in, if yes, create infoWindow and addListener.
 
-    // more markers, more values to pass:
-    addMarker({ coords: { lat: -34.9804, lng: 138.5131 },
-      iconImage: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
-      // setting content for infoWindow later:
-      content: '<h1>Glenelg</h1>' });  // Glenelg
-    addMarker({ coords: { lat: -35.1488, lng: 138.4703 } });  // Port Noarlunga
-    addMarker({ coords: { lat: -34.8389, lng: 138.4839 } });  // Semaphore
+
+// 10. Eliminate individual function calls for each marker: array, database
+
+// ======================
+    // // b. call addMarker function and pass in values
+    // addMarker( { coords: {lat: -34.9285, lng: 138.6007},
+    //   content: '<h3>Adelaide</h3>' } );  // Adelaide SA
+
+    // // more markers, more values to pass:
+    // addMarker({ coords: { lat: -34.9804, lng: 138.5131 },
+    //   iconImage: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+    //   // setting content for infoWindow later:
+    //   content: '<h3>Glenelg</h3>' });  // Glenelg
+    // addMarker({ coords: { lat: -35.1488, lng: 138.4703 },
+    //   content: '<h3>Port Noarlunga</h3>' });  // Port Noarlunga
+    // addMarker({ coords: { lat: -34.8389, lng: 138.4839 },
+    //   content: '<h3>Semaphore</h3>' });  // Semaphore
+// ================================================= 
+
+
+    // Array of markers:
+    const markers = [
+      { coords: {lat: -34.9285, lng: 138.6007},
+        content: '<h3>Adelaide</h3>' },
+      { coords: { lat: -34.9804, lng: 138.5131 },
+        iconImage: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        content: '<h3>Glenelg</h3>' },
+      { coords: { lat: -35.1488, lng: 138.4703 },
+        iconImage: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        content: '<h3>Port Noarlunga</h3>' },
+      { coords: { lat: -34.8389, lng: 138.4839 },
+        iconImage: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+        content: '<h3>Semaphore</h3>' }
+    ];
+        // Added flags because they're by the beach; obs would set this as a var at some time rather than all this "https://......."
+        // This could all be stored in a database, accessed & manipulated by a form for CRUD and to edit icon and content
+
+    // Next, loop through this array of markers to call addMarker():
+    // could do a forEach, but this is fine:
+    for (let i = 0; i<markers.length; i++) {
+      // add current iteration of marker and call function:
+      addMarker(markers[i]);
+    }
+
 
     // // a. create addMarker function
     // function addMarker(props) {
@@ -191,6 +231,7 @@ So: understand first, then check the changes.
     // now one marker is a beachflag, the others std.
     // could add "content" as a property, and use it to set infoWindow for each marker: (see properties for location "Glenelg" above)
       
+    // // 6. Add an Info Window - a little pop up with some content.
       // test for "content" property on object passed:
       if (props.content) {
         let infoWindow = new google.maps.InfoWindow({
@@ -205,14 +246,14 @@ So: understand first, then check the changes.
 
 
 // ====================================================================
-// // 6. Add an Info Window - a little pop up with some content.
+// *****moved to within addMarker() // 6. Add an Info Window - a little pop up with some content.
 // const infoWindow = new google.maps.InfoWindow({
 //   content: '<h1>Adelaide</h1>'
 // });
 // marker.addListener("click", function(){
 //   infoWindow.open(map, marker);
 // });
+// *******************
 
 } // end of initMap()
-
 
