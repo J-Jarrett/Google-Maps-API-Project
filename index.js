@@ -17,6 +17,7 @@ So: understand first, then check the changes.
 // 8. Customize marker Icons for certain Markers (avoid "undefined" icons)
 // 9. Customize infoWindow for each marker - diff content
 // 10. Eliminate individual function calls for each marker: array, database
+// 11. Last tweak: user can click anywhere on the map to add a standard marker, i.e. no iconImage or content
 
 
 
@@ -98,7 +99,17 @@ So: understand first, then check the changes.
       zoom: 10
     }
     map = new google.maps.Map(document.getElementById("map"), options);
-      
+
+    // 11. Last tweak: user can click anywhere on the map to add a standard marker, i.e. no iconImage or content
+      // we could have a form input to add markers, (see 18. Google Geodcode API, Traversy Notes Book 3) but let's keep it simple.
+      // We're going to add a listener to the map for a "click" event; pass in the element to listen on, the event to listen for, then the function takes the event parameter and calls the addMarker() function. 
+      // addMarker() takes in the props object, which will be { coords: event.latLng }
+
+    google.maps.event.addListener(map, "click", function(event) {
+      addMarker({coords: event.latLng});
+    })
+          // These markers don't persist because they have no localStorage and have not been added to a database or our markers array. 
+
     // 4. Add a marker to our map. (within initMap)
     
     // 5. Add a Custom marker to our map (also within initMap
